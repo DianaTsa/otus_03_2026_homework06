@@ -1,23 +1,16 @@
-from selenium.webdriver.support.wait import WebDriverWait
+from pages.admin_page import AdminPage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 def test_admin_login_logout(driver, base_url):
-    wait = WebDriverWait(driver, 10)
-    driver.get(base_url + "administration")
+    admin_page = AdminPage(driver, base_url)
+    admin_page.open("/administration")
 
+    admin_page.login("admin@example.com", "Admin123!")
 
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#email"))).send_keys("admin@example.com")
-    driver.find_element(By.CSS_SELECTOR, "#passwd").send_keys("Admin123!")
-    driver.find_element(By.ID, "submit_login").click()
+    assert admin_page.wait_visible((By.CSS_SELECTOR, "#dashtrends"))
 
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#dashtrends")))
+    admin_page.logout()
 
-    driver.find_element(By.CSS_SELECTOR, "#employee_infos").click()
-    driver.find_element(By.ID, "header_logout").click()
-
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#email")))
-
-
+    assert admin_page.wait_visible(admin_page.EMAIL_INPUT)
 
 

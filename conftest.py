@@ -1,5 +1,8 @@
 import pytest
 from selenium import webdriver
+from pages.admin_products_page import AdminProductsPage
+from pages.admin_page import AdminPage
+from pages.home_page import HomePage
 
 
 def pytest_addoption(parser):
@@ -43,3 +46,17 @@ def driver(request):
     yield driver
 
     driver.quit()
+
+@pytest.fixture
+def admin_products_page(driver, base_url):
+    # логинимся в админку
+    admin = AdminPage(driver, base_url)
+    admin.open("/administration")
+    admin.login("admin@example.com", "Admin123!")
+
+    # возвращаем готовую страницу товаров
+    return AdminProductsPage(driver, base_url)
+
+@pytest.fixture
+def home_page(driver, base_url):
+    return HomePage(driver, base_url)
