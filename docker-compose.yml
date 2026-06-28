@@ -151,8 +151,8 @@ services:
     command:
       - "tests/"
       - "-v"
-      - "--browser=chrome"
-      - "--browser_version=128.0"
+      - "--browser=${BROWSER:-chrome}"
+      - "--browser_version=${BROWSER_VERSION:-128.0}"
       - "--executor=selenoid"
       - "--base-url=http://prestashop:80/"
       - "--alluredir=/app/allure-results"
