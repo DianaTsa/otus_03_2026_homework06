@@ -51,17 +51,24 @@ def driver(request):
         options.add_argument("--headless=new")
         driver = webdriver.Chrome(options=options)
         logger.info("Запущен локальный Chrome")
-    elif executor == "selenoid":
-        executor_url = "http://selenoid:4444/wd/hub"
+    elif executor == "selenoid" or executor.startswith("http"):
+        if executor == "selenoid":
+            executor_url = "http://selenoid:4444/wd/hub"
+        else:
+            executor_url = executor
+
         options.set_capability("browserName", browser)
         options.set_capability("browserVersion", version)
+
         selenoid_options = {
             "enableVNC": True,
             "enableVideo": False,
             "enableLog": True,
             "sessionTimeout": "5m"
         }
+
         options.set_capability("selenoid:options", selenoid_options)
+
         logger.info(f"Подключение к Selenoid: {executor_url}")
         driver = webdriver.Remote(command_executor=executor_url, options=options)
     elif executor == "remote":
